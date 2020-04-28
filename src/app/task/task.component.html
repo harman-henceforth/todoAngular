@@ -15,9 +15,9 @@
         <td>
 
           <div class="custom-control custom-checkbox">
-            <input (change)="completed(task)" type="checkbox" class="custom-control-input" id="customCheck{{i+1}}" [checked]="task.isCompleted">
+            <input (change)="statusTask(task)" type="checkbox" class="custom-control-input" id="customCheck{{i+1}}" [checked]="task.completed">
             <label class="custom-control-label" for="customCheck{{i+1}}"></label>
-            {{task.taskName}}
+            {{task.title}}
             </div>
 
             </td>
@@ -36,15 +36,16 @@
     <tfoot >
       <tr>
 
-        <td colspan="4" *ngIf="itemLeft || completedTasks.length">
+        <td colspan="4" >
           <!-- <span>dsflkjf</span> -->
-          <div *ngIf="itemLeft">
-            {{itemLeft}} Items left
+          <div *ngIf="tasksList.length">
+            {{tasksList.length}} Items left
           </div>
           <div class="text-right">
-            <button type="button" class="btn btn-outline-info m-2" [ngClass]="{active: isAllList}" (click)="allTasks()">All</button>
-            <button type="button" class="btn btn-outline-info m-2" [ngClass]="{active: isActiveList}" (click)="getActiveTasks()">Active</button>
-            <button type="button" class="btn btn-outline-info m-2" [ngClass]="{active: isCompletedList}" (click)="getCompletedTasks()">Complete</button>
+            <button type="button" class="btn btn-outline-info m-2"  routerLinkActive="router-link-active" [ngClass]="{active: activeRoute('all')}"  [routerLink]="['/all']" >All</button>
+            <button type="button" [ngClass]="{active: activeRoute('active')}" class="btn btn-outline-info m-2" [routerLink]="['/active']">Active</button>
+            <button [routerLink]="['/completed']" routerLinkActive="router-link-active"  type="button" class="btn btn-outline-info m-2" [ngClass]="{active: activeRoute('completed')}" >Complete</button>
+            <span><a href="javascript:" (click)="clearAllTask()" class="btn-outline-info">Clear all</a></span>
           </div>
 
 

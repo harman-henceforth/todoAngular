@@ -4,6 +4,9 @@ import { from } from "rxjs";
 import { UUID } from "angular2-uuid";
 import { TaskService } from "./task.service";
 import { ThrowStmt } from '@angular/compiler';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Route } from '@angular/compiler/src/core';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: "app-task",
   templateUrl: "./task.component.html",
@@ -12,7 +15,7 @@ import { ThrowStmt } from '@angular/compiler';
 export class TaskComponent implements OnInit {
   newTaskName$: any;
   tasksList: ITask[] = [];
-  task: ITask = {};
+  task: ITask;
   completedTasks: Array<any> = [];
   // activeTasks: Array<any> = [];
   itemLeft: number = 0;
@@ -20,61 +23,81 @@ export class TaskComponent implements OnInit {
   isAllList: boolean;
   isActiveList: boolean = true;
   isCompletedList: boolean;
-  constructor(public taskService: TaskService) {}
+  constructor(public taskService: TaskService, public route: ActivatedRoute, private router: Router) {
+    const subscription = router.events.subscribe(e => {
+      if(e instanceof NavigationEnd){
+        console.log(e)
+        this.getTasks();
+        subscription.unsubscribe();
+      }
+    });
 
-  ngOnInit() {}
+  }
 
+  ngOnInit() {
+    console.log(this.route.snapshot.data);
+    // this.getTasks();
+
+  }
+  getTasks() {
+    const request = {
+      completed: this.route.snapshot.data.type
+    }
+    this.taskService.getTask(request).subscribe(res => {
+      console.log(res);
+      this.tasksList = res;
+
+    })
+  }
   addNewTask() {
     // add new task into tasks list
-    this.tasksList = this.taskService.addTask(this.newTaskName$);
-    this.tasksList = (this.isCompletedList &&this.completedTasks.length)  ? this.completedTasks : this.tasksList;
-    this.newTaskName$ = '';
-    console.log(this.tasksList.length);
-    this.itemLeft = this.tasksList.length;
-    // this.activeTasks = this.tasksList;
-  }
-  completed(task: ITask) {
-    this.completedTasks = this.taskService.taskCompleted(task);
-    if(task.isCompleted) {
-      this.tasksList = this.tasksList.filter(x => {
-        return x.id !== task.id;
-      });
+    const request = {
+      title: this.newTaskName$
     }
-    if(this.isAllList && !this.task.isCompleted) {
-      this.tasksList = this.tasksList.concat(this.completedTasks);
+    this.taskService.addNewTask(request).subscribe(res => {
+      console.log(res);
+      this.getTasks();
+      this.newTaskName$ = '';
+
+    })
+
+  }
+  statusTask(task: ITask) {
+    const request = {
+      id: task.id,
+      completed: task.completed ? 0 : 1,
+      title: task.title,
+      order: task.order
     }
-    // this.completedTasks = this.tasksList;
-    console.log(this.completedTasks.length);
-    console.log(this.tasksList.length);
+    this.taskService.statusTask(request).subscribe(res=> {
+      console.log(res);
+      this.getTasks();
 
-    this.itemLeft = this.tasksList.length;
-    // this.activeTasks = this.tasksList;
-    // this.tasksList.splice(index, 1);
-    // this.activeTasks.splice(index, 1);
-  }
-  allTasks() {
+    })
 
-    this.tasksList = this.taskService.getAllTasks();
-    this.isAllList = true;
-    this.isActiveList = false;
-    this.isCompletedList = false;
-  }
-  getCompletedTasks() {
-
-    this.completedTasks = this.taskService.getCompletedTasks();
-    this.tasksList = this.completedTasks;
-    this.isAllList = false;
-    this.isActiveList = false;
-    this.isCompletedList = true;
-  }
-  getActiveTasks() {
-    this.tasksList = this.taskService.getActiveTasks();
-    this.itemLeft = this.tasksList.length;
-    this.isAllList = false;
-    this.isActiveList = true;
-    this.isCompletedList = false;
   }
   deleteTask(task: ITask) {
-    this.tasksList = this.taskService.deleteTask(task);
+    const request = {
+      id: task.id,
+      completed: task.completed ? 0 : 1,
+      title: task.title,
+      order: task.order
+    }
+    this.taskService.deleteTask(request).subscribe(res=> {
+      console.log(res);
+      this.getTasks();
+    })
+  }
+  clearAllTask() {
+
+    this.taskService.clearAllTask().subscribe(res=> {
+      console.log(res);
+      this.getTasks();
+    })
+  }
+
+
+  activeRoute(routename: string): boolean{
+    return this.router.url.indexOf(routename) > -1;
   }
 }

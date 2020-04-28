@@ -1,6 +1,9 @@
 export interface ITask {
   id?: any;
   taskName?: any;
+  title?: any;
+  completed:boolean;
+  order: any;
   isCompleted?: boolean;
   isActive?: boolean;
 };
