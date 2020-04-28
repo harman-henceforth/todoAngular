@@ -6,10 +6,7 @@ import {
   HttpClient,
   HttpHeaders,
   HttpErrorResponse,
-  HttpRequest,
-  HttpParams,
-  HttpEvent,
-  HttpEventType
+
 } from '@angular/common/http';
 import { Observable, of, throwError, Subject, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap, timeout } from 'rxjs/operators';
