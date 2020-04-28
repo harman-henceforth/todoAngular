@@ -1,0 +1,56 @@
+<div class="container">
+  <input class="form-control mb-4" [(ngModel)]="newTaskName$" (keyup.enter)="addNewTask()" id="tableSearch" type="text"
+    placeholder="What need to be done?">
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="myTable" >
+      <tr  *ngFor="let task of tasksList;let i = index">
+
+        <td>
+
+          <div class="custom-control custom-checkbox">
+            <input (change)="statusTask(task)" type="checkbox" class="custom-control-input" id="customCheck{{i+1}}" [checked]="task.completed">
+            <label class="custom-control-label" for="customCheck{{i+1}}"></label>
+            {{task.title}}
+            </div>
+
+            </td>
+        <td> <a href="javascript:" (click)="deleteTask(task)">Delete</a>
+        </td>
+
+      </tr>
+
+      <tr *ngIf="!tasksList.length">
+        <td colspan="4" class="text-center">
+          <i>No tasks</i>
+        </td>
+      </tr>
+    </tbody>
+
+    <tfoot >
+      <tr>
+
+        <td colspan="4" >
+          <!-- <span>dsflkjf</span> -->
+          <div *ngIf="tasksList.length">
+            {{tasksList.length}} Items left
+          </div>
+          <div class="text-right">
+            <button type="button" class="btn btn-outline-info m-2"  routerLinkActive="router-link-active" [ngClass]="{active: activeRoute('all')}"  [routerLink]="['/all']" >All</button>
+            <button type="button" [ngClass]="{active: activeRoute('active')}" class="btn btn-outline-info m-2" [routerLink]="['/active']">Active</button>
+            <button [routerLink]="['/completed']" routerLinkActive="router-link-active"  type="button" class="btn btn-outline-info m-2" [ngClass]="{active: activeRoute('completed')}" >Complete</button>
+            <span><a href="javascript:" (click)="clearAllTask()" class="btn-outline-info">Clear all</a></span>
+          </div>
+
+
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
