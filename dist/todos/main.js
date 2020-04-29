@@ -243,14 +243,16 @@ var TaskComponent = /** @class */ (function () {
     TaskComponent.prototype.addNewTask = function () {
         var _this = this;
         // add new task into tasks list
-        var request = {
-            title: this.newTaskName$
-        };
-        this.taskService.addNewTask(request).subscribe(function (res) {
-            console.log(res);
-            _this.getTasks();
-            _this.newTaskName$ = '';
-        });
+        if (this.newTaskName$) {
+            var request = {
+                title: this.newTaskName$
+            };
+            this.taskService.addNewTask(request).subscribe(function (res) {
+                console.log(res);
+                _this.getTasks();
+                _this.newTaskName$ = '';
+            });
+        }
     };
     TaskComponent.prototype.statusTask = function (task) {
         var _this = this;
