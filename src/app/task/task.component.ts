@@ -59,7 +59,6 @@ export class TaskComponent implements OnInit {
       console.log(res);
       this.getTasks();
       this.newTaskName$ = '';
-
     })
   }
 
