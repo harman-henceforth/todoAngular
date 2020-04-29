@@ -51,6 +51,7 @@ export class TaskComponent implements OnInit {
   }
   addNewTask() {
     // add new task into tasks list
+    if(this.newTaskName$) {
     const request = {
       title: this.newTaskName$
     }
@@ -58,8 +59,8 @@ export class TaskComponent implements OnInit {
       console.log(res);
       this.getTasks();
       this.newTaskName$ = '';
-
     })
+  }
 
   }
   statusTask(task: ITask) {

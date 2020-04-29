@@ -41,7 +41,7 @@ module.exports = "\n\n<router-outlet></router-outlet>\n"
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <input class=\"form-control mb-4\" [(ngModel)]=\"newTaskName$\" (keyup.enter)=\"addNewTask()\" id=\"tableSearch\" type=\"text\"\n    placeholder=\"What need to be done?\">\n\n  <table class=\"table table-bordered table-striped\">\n    <thead>\n      <tr>\n        <th>Task</th>\n        <th>Action</th>\n      </tr>\n    </thead>\n    <tbody id=\"myTable\" >\n      <tr  *ngFor=\"let task of tasksList;let i = index\">\n\n        <td>\n\n          <div class=\"custom-control custom-checkbox\">\n            <input (change)=\"completed(task)\" type=\"checkbox\" class=\"custom-control-input\" id=\"customCheck{{i+1}}\" [checked]=\"task.isCompleted\">\n            <label class=\"custom-control-label\" for=\"customCheck{{i+1}}\"></label>\n            {{task.taskName}}\n            </div>\n\n            </td>\n        <td> <a href=\"javascript:\" (click)=\"deleteTask(task)\">Delete</a>\n        </td>\n\n      </tr>\n\n      <tr *ngIf=\"!tasksList.length\">\n        <td colspan=\"4\" class=\"text-center\">\n          <i>No tasks</i>\n        </td>\n      </tr>\n    </tbody>\n\n    <tfoot >\n      <tr>\n\n        <td colspan=\"4\" *ngIf=\"itemLeft || completedTasks.length\">\n          <!-- <span>dsflkjf</span> -->\n          <div *ngIf=\"itemLeft\">\n            {{itemLeft}} Items left\n          </div>\n          <div class=\"text-right\">\n            <button type=\"button\" class=\"btn btn-outline-info m-2\" [ngClass]=\"{active: isAllList}\" (click)=\"allTasks()\">All</button>\n            <button type=\"button\" class=\"btn btn-outline-info m-2\" [ngClass]=\"{active: isActiveList}\" (click)=\"getActiveTasks()\">Active</button>\n            <button type=\"button\" class=\"btn btn-outline-info m-2\" [ngClass]=\"{active: isCompletedList}\" (click)=\"getCompletedTasks()\">Complete</button>\n          </div>\n\n\n        </td>\n      </tr>\n    </tfoot>\n  </table>\n</div>\n"
+module.exports = "<div class=\"container\">\n  <input class=\"form-control mb-4\" [(ngModel)]=\"newTaskName$\" (keyup.enter)=\"addNewTask()\" id=\"tableSearch\" type=\"text\"\n    placeholder=\"What need to be done?\">\n\n  <table class=\"table table-bordered table-striped\">\n    <thead>\n      <tr>\n        <th>Task</th>\n        <th>Action</th>\n      </tr>\n    </thead>\n    <tbody id=\"myTable\" >\n      <tr  *ngFor=\"let task of tasksList;let i = index\">\n\n        <td>\n\n          <div class=\"custom-control custom-checkbox\">\n            <input (change)=\"statusTask(task)\" type=\"checkbox\" class=\"custom-control-input\" id=\"customCheck{{i+1}}\" [checked]=\"task.completed\">\n            <label class=\"custom-control-label\" for=\"customCheck{{i+1}}\"></label>\n            {{task.title}}\n            </div>\n\n            </td>\n        <td> <a href=\"javascript:\" (click)=\"deleteTask(task)\">Delete</a>\n        </td>\n\n      </tr>\n\n      <tr *ngIf=\"!tasksList.length\">\n        <td colspan=\"4\" class=\"text-center\">\n          <i>No tasks</i>\n        </td>\n      </tr>\n    </tbody>\n\n    <tfoot >\n      <tr>\n\n        <td colspan=\"4\" >\n          <!-- <span>dsflkjf</span> -->\n          <div *ngIf=\"tasksList.length\">\n            {{tasksList.length}} Items left\n          </div>\n          <div class=\"text-right\">\n            <button type=\"button\" class=\"btn btn-outline-info m-2\"  routerLinkActive=\"router-link-active\" [ngClass]=\"{active: activeRoute('all')}\"  [routerLink]=\"['/all']\" >All</button>\n            <button type=\"button\" [ngClass]=\"{active: activeRoute('active')}\" class=\"btn btn-outline-info m-2\" [routerLink]=\"['/active']\">Active</button>\n            <button [routerLink]=\"['/completed']\" routerLinkActive=\"router-link-active\"  type=\"button\" class=\"btn btn-outline-info m-2\" [ngClass]=\"{active: activeRoute('completed')}\" >Complete</button>\n            <span><a href=\"javascript:\" (click)=\"clearAllTask()\" class=\"btn-outline-info\">Clear all</a></span>\n          </div>\n\n\n        </td>\n      </tr>\n    </tfoot>\n  </table>\n</div>\n"
 
 /***/ }),
 
@@ -64,7 +64,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var routes = [
-    { path: "", component: src_app_task_task_component__WEBPACK_IMPORTED_MODULE_3__["TaskComponent"] },
+    { path: '', component: src_app_task_task_component__WEBPACK_IMPORTED_MODULE_3__["TaskComponent"], data: { type: '' } },
+    { path: 'all', component: src_app_task_task_component__WEBPACK_IMPORTED_MODULE_3__["TaskComponent"], data: { type: '' } },
+    { path: 'active', component: src_app_task_task_component__WEBPACK_IMPORTED_MODULE_3__["TaskComponent"], data: { type: 0 } },
+    { path: 'completed', component: src_app_task_task_component__WEBPACK_IMPORTED_MODULE_3__["TaskComponent"], data: { type: 1 } },
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -142,6 +145,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./app.component */ "./src/app/app.component.ts");
 /* harmony import */ var src_app_task_task_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! src/app/task/task.component */ "./src/app/task/task.component.ts");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+
 
 
 
@@ -160,7 +165,7 @@ var AppModule = /** @class */ (function () {
             ],
             imports: [
                 _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"],
-                _app_routing_module__WEBPACK_IMPORTED_MODULE_3__["AppRoutingModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"]
+                _app_routing_module__WEBPACK_IMPORTED_MODULE_3__["AppRoutingModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"], _angular_common_http__WEBPACK_IMPORTED_MODULE_7__["HttpClientModule"]
             ],
             providers: [],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]]
@@ -197,72 +202,98 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _task_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./task.service */ "./src/app/task/task.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+
 
 
 
 var TaskComponent = /** @class */ (function () {
-    function TaskComponent(taskService) {
+    function TaskComponent(taskService, route, router) {
+        var _this = this;
         this.taskService = taskService;
+        this.route = route;
+        this.router = router;
         this.tasksList = [];
-        this.task = {};
         this.completedTasks = [];
         // activeTasks: Array<any> = [];
         this.itemLeft = 0;
         this.isActiveList = true;
+        var subscription = router.events.subscribe(function (e) {
+            if (e instanceof _angular_router__WEBPACK_IMPORTED_MODULE_3__["NavigationEnd"]) {
+                console.log(e);
+                _this.getTasks();
+                subscription.unsubscribe();
+            }
+        });
     }
-    TaskComponent.prototype.ngOnInit = function () { };
-    TaskComponent.prototype.addNewTask = function () {
-        // add new task into tasks list
-        this.tasksList = this.taskService.addTask(this.newTaskName$);
-        this.tasksList = (this.isCompletedList && this.completedTasks.length) ? this.completedTasks : this.tasksList;
-        this.newTaskName$ = '';
-        console.log(this.tasksList.length);
-        this.itemLeft = this.tasksList.length;
-        // this.activeTasks = this.tasksList;
+    TaskComponent.prototype.ngOnInit = function () {
+        console.log(this.route.snapshot.data);
+        // this.getTasks();
     };
-    TaskComponent.prototype.completed = function (task) {
-        this.completedTasks = this.taskService.taskCompleted(task);
-        if (task.isCompleted) {
-            this.tasksList = this.tasksList.filter(function (x) {
-                return x.id !== task.id;
+    TaskComponent.prototype.getTasks = function () {
+        var _this = this;
+        var request = {
+            completed: this.route.snapshot.data.type
+        };
+        this.taskService.getTask(request).subscribe(function (res) {
+            console.log(res);
+            _this.tasksList = res;
+        });
+    };
+    TaskComponent.prototype.addNewTask = function () {
+        var _this = this;
+        // add new task into tasks list
+        if (this.newTaskName$) {
+            var request = {
+                title: this.newTaskName$
+            };
+            this.taskService.addNewTask(request).subscribe(function (res) {
+                console.log(res);
+                _this.getTasks();
+                _this.newTaskName$ = '';
             });
         }
-        if (this.isAllList && !this.task.isCompleted) {
-            this.tasksList = this.tasksList.concat(this.completedTasks);
-        }
-        // this.completedTasks = this.tasksList;
-        console.log(this.completedTasks.length);
-        console.log(this.tasksList.length);
-        this.itemLeft = this.tasksList.length;
-        // this.activeTasks = this.tasksList;
-        // this.tasksList.splice(index, 1);
-        // this.activeTasks.splice(index, 1);
     };
-    TaskComponent.prototype.allTasks = function () {
-        this.tasksList = this.taskService.getAllTasks();
-        this.isAllList = true;
-        this.isActiveList = false;
-        this.isCompletedList = false;
-    };
-    TaskComponent.prototype.getCompletedTasks = function () {
-        this.completedTasks = this.taskService.getCompletedTasks();
-        this.tasksList = this.completedTasks;
-        this.isAllList = false;
-        this.isActiveList = false;
-        this.isCompletedList = true;
-    };
-    TaskComponent.prototype.getActiveTasks = function () {
-        this.tasksList = this.taskService.getActiveTasks();
-        this.itemLeft = this.tasksList.length;
-        this.isAllList = false;
-        this.isActiveList = true;
-        this.isCompletedList = false;
+    TaskComponent.prototype.statusTask = function (task) {
+        var _this = this;
+        var request = {
+            id: task.id,
+            completed: task.completed ? 0 : 1,
+            title: task.title,
+            order: task.order
+        };
+        this.taskService.statusTask(request).subscribe(function (res) {
+            console.log(res);
+            _this.getTasks();
+        });
     };
     TaskComponent.prototype.deleteTask = function (task) {
-        this.tasksList = this.taskService.deleteTask(task);
+        var _this = this;
+        var request = {
+            id: task.id,
+            completed: task.completed ? 0 : 1,
+            title: task.title,
+            order: task.order
+        };
+        this.taskService.deleteTask(request).subscribe(function (res) {
+            console.log(res);
+            _this.getTasks();
+        });
+    };
+    TaskComponent.prototype.clearAllTask = function () {
+        var _this = this;
+        this.taskService.clearAllTask().subscribe(function (res) {
+            console.log(res);
+            _this.getTasks();
+        });
+    };
+    TaskComponent.prototype.activeRoute = function (routename) {
+        return this.router.url.indexOf(routename) > -1;
     };
     TaskComponent.ctorParameters = function () { return [
-        { type: _task_service__WEBPACK_IMPORTED_MODULE_2__["TaskService"] }
+        { type: _task_service__WEBPACK_IMPORTED_MODULE_2__["TaskService"] },
+        { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"] },
+        { type: _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"] }
     ]; };
     TaskComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -270,7 +301,7 @@ var TaskComponent = /** @class */ (function () {
             template: __webpack_require__(/*! raw-loader!./task.component.html */ "./node_modules/raw-loader/index.js!./src/app/task/task.component.html"),
             styles: [__webpack_require__(/*! ./task.component.scss */ "./src/app/task/task.component.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_task_service__WEBPACK_IMPORTED_MODULE_2__["TaskService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_task_service__WEBPACK_IMPORTED_MODULE_2__["TaskService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
     ], TaskComponent);
     return TaskComponent;
 }());
@@ -291,86 +322,113 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TaskService", function() { return TaskService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var angular2_uuid__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! angular2-uuid */ "./node_modules/angular2-uuid/index.js");
-/* harmony import */ var angular2_uuid__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(angular2_uuid__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+
+
 
 
 
 var TaskService = /** @class */ (function () {
-    function TaskService() {
+    function TaskService(http) {
+        this.http = http;
         this.tasksList = [];
         this.completedTasks = [];
-        this.task = {};
+        this.baseUrl = 'http://18.224.18.13:8005';
+        this.apiUrl = this.baseUrl + '/api';
     }
-    TaskService.prototype.addTask = function (taskName) {
-        console.log(taskName);
-        this.task.id = angular2_uuid__WEBPACK_IMPORTED_MODULE_2__["UUID"].UUID(); // generate a random id;
-        this.task.taskName = taskName;
-        this.task.isCompleted = false;
-        this.task.isActive = true;
-        this.tasksList.push(this.task);
-        this.task = {};
-        console.log(this.tasksList);
-        return this.tasksList;
+    TaskService.prototype.addNewTask = function (req) {
+        var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]();
+        headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]()
+            .set('Content-Type', 'application/json');
+        return this.http.post(this.apiUrl + '/task', req, { headers: headers }).pipe(
+        // if responce takes more than one minute
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["timeout"])(60000), 
+        // ...errors if any
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError), 
+        // ...and calling .json() on the response to return data
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(this.extractData));
     };
-    TaskService.prototype.taskCompleted = function (task) {
-        // if task is not comppleted
-        if (!task.isCompleted) {
-            task.isCompleted = true;
-            task.isActive = false;
-            this.completedTasks.push(task);
-            this.tasksList = this.tasksList.filter(function (x) {
-                return x.id !== task.id;
-            });
-            console.log(this.completedTasks);
-            return this.completedTasks;
+    TaskService.prototype.statusTask = function (req) {
+        var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]();
+        headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]()
+            .set('Content-Type', 'application/json');
+        return this.http.patch(this.apiUrl + '/task/' + req.id, req, { headers: headers }).pipe(
+        // if responce takes more than one minute
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["timeout"])(60000), 
+        // ...errors if any
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError), 
+        // ...and calling .json() on the response to return data
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(this.extractData));
+    };
+    TaskService.prototype.deleteTask = function (req) {
+        var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]();
+        headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]()
+            .set('Content-Type', 'application/json');
+        return this.http.delete(this.apiUrl + '/task/' + req.id, { headers: headers }).pipe(
+        // if responce takes more than one minute
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["timeout"])(60000), 
+        // ...errors if any
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError), 
+        // ...and calling .json() on the response to return data
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(this.extractData));
+    };
+    TaskService.prototype.clearAllTask = function () {
+        var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]();
+        headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]()
+            .set('Content-Type', 'application/json');
+        return this.http.delete(this.apiUrl + '/task/', { headers: headers }).pipe(
+        // if responce takes more than one minute
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["timeout"])(60000), 
+        // ...errors if any
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError), 
+        // ...and calling .json() on the response to return data
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(this.extractData));
+    };
+    TaskService.prototype.getTask = function (req) {
+        var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]();
+        headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]()
+            .set('Content-Type', 'application/json');
+        return this.http.get(this.apiUrl + '/task', { headers: headers, params: req }).pipe(
+        // if responce takes more than one minute
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["timeout"])(60000), 
+        // ...errors if any
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["catchError"])(this.handleError), 
+        // ...and calling .json() on the response to return data
+        Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_4__["map"])(this.extractData));
+    };
+    /*
+     * extractData function returns outer response
+     */
+    TaskService.prototype.extractData = function (res) {
+        console.log(res);
+        return res;
+    };
+    /*
+    * handleError function for HTTP error handling
+    */
+    TaskService.prototype.handleError = function (errorResponse) {
+        if (errorResponse.error instanceof ErrorEvent) {
+            console.error('Client Side Error :', errorResponse.error.message);
         }
-        // if task is already completed
         else {
-            task.isCompleted = false;
-            task.isActive = true;
-            this.tasksList.push(task);
-            return this.completedTasks = this.completedTasks.filter(function (x) {
-                return x.id !== task.id;
-            });
+            console.error('Server Side Error :', errorResponse);
+            // Swal.fire(errorResponse.error.error_description);
         }
-        // this.completedTasks.push(taskName);
-        // this.tasksList.splice(index, 1);
-        // this.activeTasks.splice(index, 1);
+        // return an observable with a meaningful error message to the end user
+        return Object(rxjs__WEBPACK_IMPORTED_MODULE_3__["throwError"])(errorResponse
+        // "There is a problem with the service. We are notified & working on it. Please try again later."
+        );
     };
-    TaskService.prototype.getCompletedTasks = function () {
-        return this.completedTasks;
-    };
-    TaskService.prototype.getAllTasks = function () {
-        return this.tasksList.concat(this.completedTasks);
-    };
-    TaskService.prototype.getActiveTasks = function () {
-        console.log(this.tasksList);
-        this.tasksList = this.tasksList.filter(function (x) {
-            return x.isActive === true;
-        });
-        console.log(this.tasksList);
-        return this.tasksList;
-    };
-    TaskService.prototype.deleteTask = function (task) {
-        if (!task.isCompleted) {
-            this.tasksList = this.tasksList.filter(function (x) {
-                return x.id !== task.id;
-            });
-            return this.tasksList;
-        }
-        else {
-            this.completedTasks = this.completedTasks.filter(function (x) {
-                return x.id !== task.id;
-            });
-            return this.completedTasks;
-        }
-    };
+    TaskService.ctorParameters = function () { return [
+        { type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }
+    ]; };
     TaskService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: 'root'
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], TaskService);
     return TaskService;
 }());
